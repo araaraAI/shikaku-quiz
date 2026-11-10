@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>社労士 練習問題（AI作成）</title>
+<style>
+:root{--bg:#f6f5f1;--card:#fff;--ink:#1f2328;--sub:#5d6670;--line:#dcd9d0;--accent:#1f5f8b;--ok:#1e7a4c;--okbg:#e6f4ec;--ng:#b3372f;--ngbg:#fbeae8;--pick:#e8f0f6}
+@media (prefers-color-scheme:dark){:root{--bg:#16181b;--card:#1f2226;--ink:#e8e6e1;--sub:#a2a9b1;--line:#353a40;--accent:#7db7de;--ok:#6fcf97;--okbg:#1d3328;--ng:#f08a80;--ngbg:#3a2220;--pick:#25323d}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 -apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;-webkit-text-size-adjust:100%}
+header{padding:20px 16px 8px;max-width:760px;margin:0 auto}
+h1{font-size:1.25rem;margin:0 0 4px}
+.lead{color:var(--sub);font-size:.88rem;margin:0}
+main{max-width:760px;margin:0 auto;padding:8px 16px 96px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:.86rem;color:var(--sub);margin:12px 0}
+.note b{color:var(--ink)}
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 14px;margin:16px 0}
+.qno{font-size:.8rem;color:var(--accent);font-weight:700;letter-spacing:.04em}
+.stem{font-weight:600;margin:4px 0 12px}
+.st{margin:0 0 10px;padding-left:1.9em;text-indent:-1.9em;font-size:.95rem}
+.st .lb{font-weight:700;display:inline-block;width:1.9em;text-indent:0}
+.ch{display:block;width:100%;text-align:left;background:transparent;color:inherit;font:inherit;border:1px solid var(--line);border-radius:10px;padding:11px 12px;margin:8px 0;cursor:pointer;font-size:.95rem;line-height:1.7}
+.ch .lb{font-weight:700;margin-right:.5em;color:var(--accent)}
+.ch.short{display:inline-block;width:auto;min-width:30%;margin-right:6px}
+.ch.pick{background:var(--pick);border-color:var(--accent)}
+.ch.ok{background:var(--okbg);border-color:var(--ok)}
+.ch.ng{background:var(--ngbg);border-color:var(--ng)}
+.ch:disabled{cursor:default;opacity:1}
+.passage p{margin:0 0 10px;font-size:.95rem}
+.blank{display:inline-block;border:1px solid var(--accent);border-radius:6px;padding:0 .5em;font-weight:700;color:var(--accent);margin:0 .15em}
+.sel{display:flex;align-items:center;gap:8px;margin:8px 0}
+.sel label{font-weight:700;width:1.6em;color:var(--accent)}
+select{flex:1;font:inherit;font-size:16px;padding:9px 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);min-width:0}
+select.ok{border-color:var(--ok);background:var(--okbg)}
+select.ng{border-color:var(--ng);background:var(--ngbg)}
+.btn{font:inherit;font-weight:700;border:0;border-radius:10px;padding:11px 18px;background:var(--accent);color:#fff;cursor:pointer;margin-top:8px}
+@media (prefers-color-scheme:dark){.btn{color:#10202b}}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.res{margin-top:12px;padding:12px;border-radius:10px;font-size:.92rem}
+.res.ok{background:var(--okbg)} .res.ng{background:var(--ngbg)}
+.res .verdict{font-weight:700;margin-bottom:6px}
+.res .verdict.ok{color:var(--ok)} .res .verdict.ng{color:var(--ng)}
+.res p{margin:0 0 8px}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom));display:flex;justify-content:space-between;align-items:center;gap:12px}
+.bar .score{font-weight:700;font-variant-numeric:tabular-nums}
+.bar .btn{margin:0;padding:8px 14px;font-size:.9rem}
+footer{max-width:760px;margin:0 auto;padding:0 16px 120px;color:var(--sub);font-size:.8rem}
+</style>
+</head>
+<body>
+<header>
+  <h1>社労士 練習問題（AI作成）</h1>
+  <p class="lead" id="setTitle"></p>
+</header>
+<main>
+  <div class="note">
+    <b>AIが作成したオリジナル問題です。本試験の過去問ではありません。</b><br>
+    条文・最高裁判決の本文・過去の本試験で正誤が確定している内容を根拠に作っていますが、誤りを含む可能性があります。法改正にも追随していません。迷ったら最新のテキストを正としてください。<br>
+    解説の印: 【過去問】本試験の公式正答で確認した内容／【判決】最高裁判決の本文／【条文】法令の条文／【AI】AIの知識によるもの
+  </div>
+  <div id="quiz"></div>
+</main>
+<footer>解答の記録はこの端末のブラウザにだけ保存されます。</footer>
+<div class="bar"><span class="score" id="score"></span><button class="btn ghost" id="reset" style="white-space:nowrap">やり直す</button></div>
+<script>
+const DATA = {"sets": [{"id": "04_労働基準法_本試験水準", "title": "労働基準法（本試験水準）", "questions": [{"type": "choice", "no": 1, "stem": "労働基準法に定める賃金等に関する次の記述のうち、誤っているものはどれか。", "statements": [], "choices": [{"label": "A", "text": "雇用契約においてある手当が時間外労働等に対する対価として支払われるものとされているか否かは、雇用契約に係る契約書等の記載内容のほか、具体的事案に応じ、使用者の労働者に対する当該手当や割増賃金に関する説明の内容、労働者の実際の労働時間等の勤務状況などの事情を考慮して判断すべきであるとするのが、最高裁判所の判例である。"}, {"label": "B", "text": "労働基準法第20条に基づく解雇予告手当を算定する際の平均賃金を算定すべき事由の発生した日は、労働者に解雇の通告をした日であり、その後、当該労働者の同意を得て解雇日を変更した場合においても、当初の解雇を通告した日とするものとされている。"}, {"label": "C", "text": "就業規則で定めた減給の制裁について、労働基準法第91条にいう平均賃金を算定すべき事由の発生した日は、減給の制裁の意思表示が相手方に到達した日である。"}, {"label": "D", "text": "雇入れ後3か月に満たない労働者について平均賃金を算定すべき事由が発生した場合において、算定事由発生日前に賃金締切日があるときは、直前の賃金締切日から起算して雇入れ後の期間とその期間中の賃金の総額により算定することとされている。"}, {"label": "E", "text": "使用者の責に帰すべき事由による休業が労働協約、就業規則又は労働契約により休日と定められている日を含む期間にわたる場合、使用者は、当該休日と定められている日についても、労働基準法第26条に定める休業手当を支払わなければならない。"}], "answer": "E", "answerText": "<b>正解 E</b>", "explain": ["A ○【判決】日本ケミカル事件（最一小判 平30.7.19）の本文どおり", "B ○【過去問】令和7年 問2B（正しい肢）", "C ○【過去問＋AI】令和8年 問7オは「制裁事由が発生した日」として誤り。正しくは意思表示の到達日（この部分はAIの知識）", "D ○【過去問】令和7年 問2Dは「賃金締切日があるか否かにかかわらず」として誤り", "<b>E ✕</b>【過去問】令和7年 問4E（正しい肢）の逆。休日と定められている日については、休業手当を支払う義務は生じない"]}, {"type": "choice", "no": 2, "stem": "労働基準法に定める労働契約等に関する次のアからオまでの記述のうち、正しいものはいくつあるか。", "statements": [{"label": "ア", "text": "満60歳以上の労働者との間に締結される労働契約について、労働基準法第14条第1項第2号により5年までの契約期間が認められるか否かは、当該労働契約の締結時における当該労働者の年齢によって判断される。"}, {"label": "イ", "text": "使用者は、有期労働契約（当該契約を2回以上更新し、又は雇入れの日から起算して1年を超えて継続勤務している者に係るものに限り、あらかじめ当該契約を更新しない旨明示されているものを除く。）を更新しないこととしようとする場合には、少なくとも当該契約の期間の満了する日の30日前までに、その予告をしなければならない。"}, {"label": "ウ", "text": "労働契約の締結に際し明示された労働条件が事実と相違する場合、労働者は、即時に労働契約を解除することができるほか、明示されたとおりの労働条件の履行を使用者に求めることもできる。"}, {"label": "エ", "text": "事業主を異にするX社とY社に使用される労働者が、X社の業務により負傷し、その療養のために休業している場合、当該休業する期間及びその後30日間について、労働基準法第19条第1項による解雇の制限を受けるのはX社であって、Y社はこの制限を受けない。"}, {"label": "オ", "text": "労災保険法に基づく療養補償給付を受ける労働者は、使用者が自ら労働基準法第75条の規定による療養補償を行っている場合に当たらないから、当該労働者が療養開始後3年を経過しても疾病等が治らない場合に、使用者が同法第81条の規定による打切補償の支払をしても、同法第19条第1項ただし書の適用を受けることはできないとするのが、最高裁判所の判例である。"}], "choices": [{"label": "A", "text": "一つ"}, {"label": "B", "text": "二つ"}, {"label": "C", "text": "三つ"}, {"label": "D", "text": "四つ"}, {"label": "E", "text": "五つ"}], "answer": "C", "answerText": "<b>正解 C（三つ：ア・ウ・エ）</b>", "explain": ["ア ○【過去問】令和7年 問3A（正しい肢）", "<b>イ ✕</b>【過去問】令和6年 問3A（正しい肢）は「<b>3回以上</b>更新し」。ここだけを入れ替えています", "ウ ○【過去問】令和7年 問3Cは「解除することができるにとどまり…要求することはできない」として誤り", "エ ○【過去問】令和7年 問3Dは「X社もY社も解雇してはならない」として誤り", "<b>オ ✕</b>【判決】専修大学事件（最二小判 平27.6.8）。記述は原審（高裁）の考え方。最高裁は、労災保険の保険給付の実質は使用者の災害補償義務を政府が保険給付の形式で行うものであるとして、打切補償の支払により第19条第1項ただし書の<b>適用を受けることができる</b>とした"]}, {"type": "choice", "no": 3, "stem": "労働基準法に定める時間外・休日労働及び割増賃金に関する次の記述のうち、正しいものはどれか。", "statements": [], "choices": [{"label": "A", "text": "労働者数が本社120人、P工場60人、Q営業所20人の合計200人である企業において、本社の労働者110人のみで組織する労働組合がある場合、当該労働組合は当該企業の労働者の過半数で組織されているから、P工場及びQ営業所における労働基準法第36条の協定についても、労働者側の協定当事者となる。"}, {"label": "B", "text": "労働基準法第36条の協定の当事者である「労働者の過半数を代表する者」を選出する際の「労働者」の範囲には、同法第41条第2号の管理監督者や満18歳に満たない者のように時間外労働又は休日労働をさせることが想定されない者は含まれないと解すべきであるとされている。"}, {"label": "C", "text": "いわゆる年俸制の適用を受ける労働者について、年俸額の一部を賞与として支払うこととしている場合であって、当該賞与の支給額があらかじめ確定しているときは、当該賞与は、割増賃金の基礎となる賃金に算入しなければならない。"}, {"label": "D", "text": "使用者が雇用契約に基づき時間外労働等に対する対価として定額の手当を支払う場合について、労働基準法第37条や他の労働関係法令は、当該手当の支払によって割増賃金の全部又は一部を支払ったものといえるために、当該手当を上回る金額の割増賃金請求権が発生した事実を労働者が認識して直ちに支払を請求することができる仕組みが備わっていることを必須のものとしていると解されるとするのが、最高裁判所の判例である。"}, {"label": "E", "text": "通常は事務作業に従事している労働者が、法定労働時間外に、特殊作業手当が支払われる現場作業に従事した場合、当該現場作業は当該労働者にとって通常の業務ではないから、当該特殊作業手当は、当該時間外労働に係る割増賃金の基礎となる賃金に算入しなくとも差し支えないとされている。"}], "answer": "C", "answerText": "<b>正解 C</b>", "explain": ["<b>A ✕</b>【過去問】令和7年 問5A（誤りの肢）と同じ論点。協定は事業場ごとに締結するので、P工場・Q営業所ではその事業場の労働者の過半数を組織していなければ当事者にならない", "<b>B ✕</b>【過去問】令和7年 問5C（正しい肢）の逆。管理監督者等を<b>含む全ての労働者</b>", "C ○【過去問】令和7年 問6Dは「算入しなくとも差し支えない」として誤り", "<b>D ✕</b>【判決】日本ケミカル事件の本文は「…必須のものとしているとは<b>解されない</b>」。語尾だけの入れ替え", "<b>E ✕</b>【過去問】令和7年 問6C（誤りの肢）と同じ論点。時間外に従事した作業に付く特殊作業手当は算入する"]}, {"type": "choice", "no": 4, "stem": "労働基準法に定める年次有給休暇及び就業規則に関する次のアからオまでの記述のうち、誤っているものの組合せは、後記AからEまでのうちどれか。", "statements": [{"label": "ア", "text": "労働基準法第39条第7項の規定による使用者の時季指定について、労働者が半日単位で取得した年次有給休暇の日数分は同条第8項の「日数」に含まれ、その分について使用者は時季指定を要しないが、労働者が時間単位で取得した分は、同項の「日数」に含まれない。"}, {"label": "イ", "text": "労働基準法第39条第1項及び第2項の出勤率の算定に当たり、産前産後の女性が同法第65条の規定によって休業した期間は出勤したものとみなされるが、生理日の就業が著しく困難な女性が同法第68条の規定によって就業しなかった期間は、同法上、出勤したものとはみなされない。"}, {"label": "ウ", "text": "労働基準法第89条第1号から第3号までに掲げる事項の一部を記載していない就業規則であっても、その効力の発生についての他の要件を具備する限り有効であるが、使用者は同条違反の責任を免れない。"}, {"label": "エ", "text": "使用者が、4月1日に入社した労働者に対し、入社日に5労働日、同年7月1日に5労働日の年次有給休暇を付与した場合、使用者は、7月1日から1年以内に5日について時季を定めることにより与えなければならず、当該労働者が4月1日から6月30日までの間に自ら請求して取得した年次有給休暇の日数があっても、その日数を当該5日から控除することはできない。"}, {"label": "オ", "text": "労働者が遅刻又は早退をした場合において、その遅刻又は早退の時間に相当する賃金額を限度として行う賃金の減額は、就業規則に制裁として定められている限り、労働基準法第91条に定める減給の制裁に関する規定の適用を受ける。"}], "choices": [{"label": "A", "text": "（アとイ）"}, {"label": "B", "text": "（アとウ）"}, {"label": "C", "text": "（イとエ）"}, {"label": "D", "text": "（ウとオ）"}, {"label": "E", "text": "（エとオ）"}], "answer": "E", "answerText": "<b>正解 E（エとオ）</b>", "explain": ["ア ○【過去問】令和6年 問6D（正しい肢）", "イ ○【過去問】令和6年 問6Eは、両方とも出勤したものとみなすとして誤り", "ウ ○【過去問】令和6年 問7Aは「無効とされている」として誤り", "<b>エ ✕</b>【AI】一部を前倒しで付与した場合、付与日数の合計が10労働日に達した日（7月1日）から1年以内に5日を取得させる。その日より前に労働者が取得した日数は、5日から<b>控除することができる</b>（施行規則第24条の5）。この肢はAIの知識によるので、テキストで確認してください", "<b>オ ✕</b>【過去問】令和7年 問7E（正しい肢）の逆。遅刻・早退の時間分は賃金債権が生じないので、その時間分の減額は第91条の適用を<b>受けない</b>。その時間分を超える減額が制裁に当たる"]}, {"type": "choice", "no": 5, "stem": "労働基準法の総則等に関する次の記述のうち、正しいものはどれか。", "statements": [], "choices": [{"label": "A", "text": "労働基準法第5条に定める「労働者の意思に反して労働を強制」するとは、不当な手段を用いることによって、使用者が労働者の意識ある意思を抑圧し、その自由な発現を妨げて労働すべく強要することをいい、労働者が現実に労働したことを要する。"}, {"label": "B", "text": "労働基準法第6条の「業として利益を得る」とは、営利を目的として同種の行為を反復継続することをいうから、反復継続して利益を得る意思があったとしても、現に行われた行為が1回にとどまる場合は、これに当たらない。"}, {"label": "C", "text": "労働基準法第3条は、労働者の信条によって賃金その他の労働条件につき差別することを禁じているが、これは雇入れ後における労働条件についての制限であって、雇入れそのものを制約する規定ではないとするのが、最高裁判所の判例である。"}, {"label": "D", "text": "労働基準法第9条に定める「労働者」とは、他人との間に使用従属の関係に立って労務に服し、報酬を受けて生活する者をいい、現に事業又は事務所に使用されていることまでは要しない。"}, {"label": "E", "text": "出向元との労働契約関係を維持したまま出向先の指揮命令を受けて就労するいわゆる在籍型出向の出向労働者については、出向元との間に労働契約関係が存続していることから、労働基準法における使用者としての責任は、出向元の使用者が負う。"}], "answer": "C", "answerText": "<b>正解 C</b>", "explain": ["<b>A ✕</b>【過去問】令和7年 問1ア。「必ずしも労働者が現実に労働することを必要としない」", "<b>B ✕</b>【過去問】令和7年 問1イ。1回の行為であっても、反復継続して利益を得る意思があれば当たる", "C ○【過去問】三菱樹脂事件（最大判 昭48.12.12）。令和6年 問1Bは、雇入れの拒否も第3条に違反するとして誤り", "<b>D ✕</b>【過去問】令和7年 問1エ（失業者を含むとした記述）と同じ論点。労働基準法の労働者は、事業又は事務所に<b>使用される者</b>（第9条）", "<b>E ✕</b>【過去問】令和6年 問1D（正しい肢）。三者間の取決めによって定められた権限と責任に応じて、<b>出向元又は出向先</b>の使用者がそれぞれ責任を負う"]}, {"type": "cloze", "no": 6, "stem": "次の文中の［ A ］〜［ E ］の部分を選択肢の中の最も適切な語句で埋め、完全な文章とせよ。", "passage": ["1　最高裁判所は、労災保険法による療養補償給付を受ける労働者に対する打切補償と解雇制限との関係が問題となった事件において、次のように判示した。", "「業務災害に関する労災保険制度は、労働基準法により使用者が負う災害補償義務の存在を前提として、その補償負担の緩和を図りつつ被災した労働者の迅速かつ公正な保護を確保するため、使用者による災害補償に代わる保険給付を行う制度であるということができ、このような労災保険法に基づく保険給付の実質は、使用者の労働基準法上の［ A ］を政府が保険給付の形式で行うものであると解するのが相当である。」", "2　最高裁判所は、歩合給の計算に当たり売上高等の一定割合に相当する金額から残業手当等に相当する金額を控除する旨を定めた賃金規則が問題となった事件において、次のように判示した。", "「（当該仕組みの下で）割増金を時間外労働等に対する対価とみるとすれば、出来高払制の賃金部分につき通常の労働時間の賃金に当たる部分はなく、全てが割増賃金であることとなるが、これは、法定の労働時間を超えた労働に対する割増分として支払われるという労働基準法37条の定める割増賃金の［ B ］から逸脱したものといわざるを得ない。」", "「割増金として支払われる賃金のうちどの部分が時間外労働等に対する対価に当たるかは明らかでないから、本件賃金規則における賃金の定めにつき、通常の労働時間の賃金に当たる部分と労働基準法37条の定める割増賃金に当たる部分とを［ C ］することはできないこととなる。」", "3　最高裁判所は、定額の手当の支払による割増賃金の支払が問題となった事件において、雇用契約においてある手当が時間外労働等に対する対価として支払われるものとされているか否かは、「雇用契約に係る契約書等の記載内容のほか、具体的事案に応じ、使用者の労働者に対する当該手当や割増賃金に関する［ D ］、労働者の実際の労働時間等の勤務状況などの事情を考慮して判断すべきである」と判示した。", "4　使用者は、有期労働契約（当該契約を3回以上更新し、又は雇入れの日から起算して1年を超えて継続勤務している者に係るものに限り、あらかじめ当該契約を更新しない旨明示されているものを除く。）を更新しないこととしようとする場合には、少なくとも当該契約の期間の満了する日の［ E ］前までに、その予告をしなければならない。"], "options": [{"mark": "①", "text": "安全配慮義務"}, {"mark": "②", "text": "災害補償義務"}, {"mark": "③", "text": "損害賠償責任"}, {"mark": "④", "text": "保険料負担義務"}, {"mark": "⑤", "text": "趣旨"}, {"mark": "⑥", "text": "本質"}, {"mark": "⑦", "text": "計算方法"}, {"mark": "⑧", "text": "最低基準"}, {"mark": "⑨", "text": "区分"}, {"mark": "⑩", "text": "算定"}, {"mark": "⑪", "text": "特定"}, {"mark": "⑫", "text": "判別"}, {"mark": "⑬", "text": "合意の有無"}, {"mark": "⑭", "text": "計算の根拠"}, {"mark": "⑮", "text": "周知の状況"}, {"mark": "⑯", "text": "説明の内容"}, {"mark": "⑰", "text": "14日"}, {"mark": "⑱", "text": "30日"}, {"mark": "⑲", "text": "1か月"}, {"mark": "⑳", "text": "60日"}], "answers": {"A": "②", "B": "⑥", "C": "⑫", "D": "⑯", "E": "⑱"}, "answerText": "<b>A ② 災害補償義務 ／ B ⑥ 本質 ／ C ⑫ 判別 ／ D ⑯ 説明の内容 ／ E ⑱ 30日</b>", "explain": ["A【判決】専修大学事件（最二小判 平27.6.8）", "B・C【判決】国際自動車事件（最一小判 令2.3.30）。Bは⑤「趣旨」と迷いやすいが、判決は「本質から逸脱」", "D【判決】日本ケミカル事件（最一小判 平30.7.19）", "E【過去問】令和6年 問3A。⑲「1か月」ではなく「30日」"]}]}]};
+const set = DATA.sets[0];
+const KEY = "shikaku-quiz:" + set.id;
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { state = {}; }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
+const el = (tag, cls, htmlText) => { const n = document.createElement(tag); if (cls) n.className = cls; if (htmlText != null) n.innerHTML = htmlText; return n; };
+document.getElementById("setTitle").textContent = set.title + "　全" + set.questions.length + "問";
+
+function resultBox(ok, answerText, explain) {
+  const r = el("div", "res " + (ok ? "ok" : "ng"));
+  r.appendChild(el("div", "verdict " + (ok ? "ok" : "ng"), ok ? "正解" : "不正解"));
+  r.appendChild(el("p", "", answerText));
+  explain.forEach(t => r.appendChild(el("p", "", t)));
+  return r;
+}
+
+function renderChoice(q, card) {
+  q.statements.forEach(s => card.appendChild(el("p", "st", '<span class="lb">' + s.label + "</span>" + s.text)));
+  const short = q.choices.every(c => c.text.length < 12);
+  const btns = q.choices.map(c => {
+    const b = el("button", "ch" + (short ? " short" : ""), '<span class="lb">' + c.label + "</span>" + c.text);
+    b.type = "button";
+    b.onclick = () => { state[q.no] = c.label; save(); show(); updateScore(); };
+    card.appendChild(b);
+    return [c.label, b];
+  });
+  const slot = el("div"); card.appendChild(slot);
+  function show() {
+    const picked = state[q.no];
+    if (!picked) return;
+    btns.forEach(([lb, b]) => {
+      b.disabled = true;
+      if (lb === q.answer) b.classList.add("ok");
+      else if (lb === picked) b.classList.add("ng");
+    });
+    slot.replaceChildren(resultBox(picked === q.answer, q.answerText, q.explain));
+  }
+  show();
+}
+
+function renderCloze(q, card) {
+  const pas = el("div", "passage");
+  q.passage.forEach(p => pas.appendChild(el("p", "", p.replace(/［\s*([A-E])\s*］/g, '<span class="blank">$1</span>'))));
+  card.appendChild(pas);
+  const cur = (state[q.no] && state[q.no].picks) || {};
+  const sels = ["A", "B", "C", "D", "E"].map(k => {
+    const row = el("div", "sel");
+    const lab = el("label", "", k); lab.htmlFor = "s" + q.no + k;
+    const s = el("select"); s.id = "s" + q.no + k;
+    s.appendChild(new Option("選択してください", ""));
+    q.options.forEach(o => s.appendChild(new Option(o.mark + " " + o.text, o.mark)));
+    s.value = cur[k] || "";
+    row.append(lab, s); card.appendChild(row);
+    return [k, s];
+  });
+  const btn = el("button", "btn", "答え合わせ"); btn.type = "button"; card.appendChild(btn);
+  const slot = el("div"); card.appendChild(slot);
+  btn.onclick = () => {
+    const picks = {}; sels.forEach(([k, s]) => picks[k] = s.value);
+    state[q.no] = { picks, done: true }; save(); show(); updateScore();
+  };
+  function show() {
+    const st = state[q.no];
+    if (!st || !st.done) return;
+    let n = 0;
+    sels.forEach(([k, s]) => { const ok = st.picks[k] === q.answers[k]; if (ok) n++; s.disabled = true; s.classList.add(ok ? "ok" : "ng"); });
+    btn.remove();
+    const box = resultBox(n >= 3, q.answerText, q.explain);
+    box.querySelector(".verdict").textContent = n + " / 5 点（基準点の目安は3点）";
+    slot.replaceChildren(box);
+  }
+  show();
+}
+
+function clozePoints(q) { const st = state[q.no]; if (!st || !st.done) return null; return ["A", "B", "C", "D", "E"].filter(k => st.picks[k] === q.answers[k]).length; }
+function updateScore() {
+  let done = 0, ok = 0, total = 0, cz = "";
+  set.questions.forEach(q => {
+    if (q.type === "choice") { total++; if (state[q.no]) { done++; if (state[q.no] === q.answer) ok++; } }
+    else { const p = clozePoints(q); if (p != null) cz = "　選択式 " + p + "/5"; }
+  });
+  document.getElementById("score").textContent = "択一式 " + ok + "/" + total + "（解答済み " + done + "）" + cz;
+}
+
+function render() {
+  const root = document.getElementById("quiz"); root.replaceChildren();
+  set.questions.forEach(q => {
+    const card = el("section", "q");
+    card.appendChild(el("div", "qno", "問" + q.no + (q.type === "cloze" ? "　選択式" : "　択一式")));
+    card.appendChild(el("div", "stem", q.stem));
+    (q.type === "choice" ? renderChoice : renderCloze)(q, card);
+    root.appendChild(card);
+  });
+  updateScore();
+}
+document.getElementById("reset").onclick = () => { if (confirm("解答の記録を消して最初からやり直しますか？")) { state = {}; save(); render(); window.scrollTo(0, 0); } };
+render();
+</script>
+</body>
+</html>
